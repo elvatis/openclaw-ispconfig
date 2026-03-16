@@ -1,9 +1,9 @@
 # STATUS - openclaw-ispconfig
 
-## Current Version: 0.4.0
+## Current Version: 0.4.1
 
-- **npm:** @elvatis_com/openclaw-ispconfig@0.4.0
-- **ClawHub:** openclaw-ispconfig@0.4.0
+- **npm:** @elvatis_com/openclaw-ispconfig@0.4.1
+- **ClawHub:** openclaw-ispconfig@0.4.1
 - **GitHub:** https://github.com/elvatis/openclaw-ispconfig/releases/tag/v0.4.0
 
 ## Build Health

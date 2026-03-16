@@ -1,6 +1,6 @@
 # @elvatis_com/openclaw-ispconfig
 
-**Current version:** 0.4.0
+**Current version:** 0.4.1
 
 OpenClaw plugin to manage ISPConfig via the Remote JSON API.
 

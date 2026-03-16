@@ -1,7 +1,7 @@
 {
   "name": "ISPConfig",
   "id": "openclaw-ispconfig",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Manage ISPConfig servers: automated site provisioning, domains, mailboxes, DNS, databases, SSL, backups, and more.",
   "tools": [
     "isp_methods_list",
