@@ -1,13 +1,13 @@
 # @elvatis_com/openclaw-ispconfig
 
-**Current version:** 0.3.0
+**Current version:** 0.4.0
 
 OpenClaw plugin to manage ISPConfig via the Remote JSON API.
 
 ## Features
 
 - Session-based API client with auto-reconnect
-- 51 tools for read, write, update, delete, and one-command provisioning
+- 65 tools for read, write, update, delete, and one-command provisioning
 - `/ispconfig` chat command for quick help and tool reference
 - Safety guards via `readOnly` and `allowedOperations`
 - Live integration tests against a real ISPConfig host (read-only)
@@ -67,7 +67,7 @@ Example output:
 
 ```
 🖥️ ISPConfig Plugin
-Version 0.3.0 | Connected to isp.elvatis.com
+Version 0.4.0 | Connected to isp.elvatis.com
 
 📋 Read (17)
 • isp_system_info - Server-Info
@@ -110,7 +110,7 @@ Key API methods used:
 
 ## Tools
 
-### Read tools (17)
+### Read tools (22)
 
 - `isp_system_info` - params: none
 - `isp_methods_list` - params: none
@@ -120,17 +120,22 @@ Key API methods used:
 - `isp_site_get` - params: `primary_id` (or `site_id`, `domain_id`)
 - `isp_domains_list` - params: none
 - `isp_dns_zone_list` - params: user-related filter params
+- `isp_dns_zone_get` - params: `primary_id` (or `zone_id`)
 - `isp_dns_record_list` - params: `zone_id`
 - `isp_mail_domain_list` - params: optional filters
 - `isp_mail_user_list` - params: optional filters
 - `isp_mail_alias_list` - params: optional filters
 - `isp_mail_forward_list` - params: optional filters
 - `isp_db_list` - params: user-related filters
+- `isp_db_get` - params: `primary_id`
+- `isp_db_user_get` - params: `primary_id`
+- `isp_ftp_user_get` - params: `primary_id`
+- `isp_shell_user_get` - params: `primary_id`
 - `isp_ssl_status` - params: none
 - `isp_quota_check` - params: `client_id`
 - `isp_cron_list` - params: optional filters
 
-### Write tools (33)
+### Write tools (42)
 
 - `isp_client_add` - params: ISPConfig `client_add` payload
 - `isp_client_update` - params: `client_id`, `params` object with fields to update
@@ -140,25 +145,34 @@ Key API methods used:
 - `isp_site_delete` - params: `primary_id`
 - `isp_domain_add` - alias for `isp_site_add`
 - `isp_dns_zone_add` - params: ISPConfig `dns_zone_add` payload
+- `isp_dns_zone_update` - params: `client_id`, `primary_id`, `params` (ns, mbox, refresh, retry, expire, minimum, ttl, active)
 - `isp_dns_zone_delete` - params: `primary_id`
-- `isp_dns_record_add` - params: include `type` (`A`, `AAAA`, `MX`, `TXT`, `CNAME`) and matching payload
+- `isp_dns_record_add` - params: include `type` (`A`, `AAAA`, `MX`, `TXT`, `CNAME`, `SRV`, `CAA`, `NS`, `PTR`) and matching payload
 - `isp_dns_record_update` - params: `type`, `primary_id`, `params` object with fields to update
 - `isp_dns_record_delete` - params: include `type` and matching delete payload
 - `isp_mail_domain_add` - params: ISPConfig `mail_domain_add` payload
+- `isp_mail_domain_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_mail_domain_delete` - params: `primary_id`
 - `isp_mail_user_add` - params: ISPConfig `mail_user_add` payload
+- `isp_mail_user_update` - params: `client_id`, `primary_id`, `params` (password, quota, etc.)
 - `isp_mail_user_delete` - params: `primary_id`
 - `isp_mail_alias_add` - params: ISPConfig `mail_alias_add` payload
+- `isp_mail_alias_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_mail_alias_delete` - params: `primary_id`
 - `isp_mail_forward_add` - params: ISPConfig `mail_forward_add` payload
+- `isp_mail_forward_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_mail_forward_delete` - params: `primary_id`
 - `isp_db_add` - params: ISPConfig `sites_database_add` payload
+- `isp_db_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_db_delete` - params: `primary_id`
 - `isp_db_user_add` - params: ISPConfig `sites_database_user_add` payload
+- `isp_db_user_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_db_user_delete` - params: `primary_id`
 - `isp_shell_user_add` - params: ISPConfig `sites_shell_user_add` payload
+- `isp_shell_user_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_shell_user_delete` - params: `primary_id`
 - `isp_ftp_user_add` - params: ISPConfig `sites_ftp_user_add` payload
+- `isp_ftp_user_update` - params: `client_id`, `primary_id`, `params` object with fields to update
 - `isp_ftp_user_delete` - params: `primary_id`
 - `isp_cron_add` - params: ISPConfig `sites_cron_add` payload
 - `isp_cron_update` - params: `client_id`, `primary_id`, `params` object with fields to update
@@ -188,7 +202,7 @@ Workflow:
 6. Optionally create DB user and database
 7. Ensure SSL flags are enabled on the site
 
-**Total: 51 tools** (17 read + 32 write + 1 alias + 1 provisioning)
+**Total: 65 tools** (22 read + 42 write + 1 provisioning)
 
 ## Safety
 
@@ -215,6 +229,30 @@ It provides `isValidIssueRepoSlug()`, `resolveIssueRepo()`, and `buildGhIssueCre
 
 ## Changelog
 
+### 0.4.0 (2026-03-16)
+
+**14 new tools + expanded DNS types.** Full CRUD coverage for all managed resources.
+
+New tools:
+
+- **DNS Zone:** `isp_dns_zone_get`, `isp_dns_zone_update` (SOA NS, TTL, refresh, etc.)
+- **Mail:** `isp_mail_domain_update`, `isp_mail_user_update`, `isp_mail_alias_update`, `isp_mail_forward_update`
+- **Database:** `isp_db_get`, `isp_db_update`, `isp_db_user_get`, `isp_db_user_update`
+- **FTP/Shell:** `isp_ftp_user_get`, `isp_ftp_user_update`, `isp_shell_user_get`, `isp_shell_user_update`
+
+DNS record type expansion:
+
+- `isp_dns_record_add`, `isp_dns_record_update`, `isp_dns_record_delete` now support **9 types**: A, AAAA, MX, TXT, CNAME, SRV, CAA, NS, PTR (was 5)
+
+Other changes:
+
+- Extended `KNOWN_METHODS` with 26 additional API methods
+- Added validation schemas for all new tools
+- Updated `/ispconfig` command to reflect 65 tools
+- Updated `dnsMethodForType()` to support SRV, CAA, NS, PTR
+
+**Total: 65 tools** (was 51)
+
 ### 0.3.0 (2026-03-15)
 
 **20 new tools** - update, delete, aliases, forwards.
@@ -237,7 +275,7 @@ Other changes:
 - Updated `/ispconfig` command with full tool list and usage examples
 - Removed em dashes from all output strings and comments
 
-**Total: 51 tools** (was 31)
+**Total: 51 tools (was 31)**
 
 ### 0.2.1 (2026-03-15)
 

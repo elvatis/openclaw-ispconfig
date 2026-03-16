@@ -1,38 +1,35 @@
 # STATUS - openclaw-ispconfig
 
-## Current Version: 0.3.0
+## Current Version: 0.4.0
 
-- **npm:** @elvatis_com/openclaw-ispconfig@0.3.0
-- **ClawHub:** openclaw-ispconfig@0.3.0
-- **GitHub:** https://github.com/elvatis/openclaw-ispconfig/releases/tag/v0.3.0
+- **npm:** @elvatis_com/openclaw-ispconfig@0.4.0
+- **ClawHub:** openclaw-ispconfig@0.4.0
+- **GitHub:** https://github.com/elvatis/openclaw-ispconfig/releases/tag/v0.4.0
 
 ## Build Health
-- TypeScript strict build: check after release
-- 51 tools registered with JSON Schema parameters
+- TypeScript strict build: OK (clean compile)
+- 65 tools registered with JSON Schema parameters
 - Plugin API uses `execute()` (not `run()`)
 - openclaw.plugin.json: version synced
 - Live integration tested against isp.elvatis.com
 
-## What Changed in v0.3.0 (2026-03-15)
-**Feature:** 20 new tools - update, delete, aliases, forwards.
+## What Changed in v0.4.0 (2026-03-16)
+**Feature:** 14 new tools + expanded DNS record types. Full CRUD for all resources.
 
 New tools:
-- isp_client_update, isp_client_delete
-- isp_site_update, isp_site_delete
-- isp_mail_domain_delete
-- isp_mail_alias_list, isp_mail_alias_add, isp_mail_alias_delete
-- isp_mail_forward_list, isp_mail_forward_add, isp_mail_forward_delete
-- isp_dns_zone_delete, isp_dns_record_update
-- isp_db_delete, isp_db_user_delete
-- isp_ftp_user_delete, isp_shell_user_delete
-- isp_cron_delete, isp_cron_update
+- isp_dns_zone_get, isp_dns_zone_update
+- isp_mail_domain_update, isp_mail_user_update, isp_mail_alias_update, isp_mail_forward_update
+- isp_db_get, isp_db_update, isp_db_user_get, isp_db_user_update
+- isp_ftp_user_get, isp_ftp_user_update, isp_shell_user_get, isp_shell_user_update
+
+DNS record type expansion:
+- isp_dns_record_add/update/delete now support 9 types: A, AAAA, MX, TXT, CNAME, SRV, CAA, NS, PTR (was 5)
 
 Other changes:
-- Extended dnsMethodForType() to support "update" action
+- Extended KNOWN_METHODS with 26 additional API methods
 - Added validation schemas for all new tools
-- Updated KNOWN_METHODS list
-- Updated /ispconfig command with full tool list and examples
-- Removed all em dashes from output strings and comments
+- Updated /ispconfig command to reflect 65 tools
+- Updated dnsMethodForType() to support SRV, CAA, NS, PTR
 
 ## Plugin API Contract (IMPORTANT)
 OpenClaw expects tools registered via `api.registerTool()` to have:
@@ -49,10 +46,9 @@ api.registerTool({
 - Missing `parameters` causes UI crash on `.properties` access
 - Using `run` instead of `execute` causes `tool.execute is not a function`
 
-## Tools (51 total)
-- 17 read tools (system_info, client_list, sites_list, dns_zone_list, mail_alias_list, mail_forward_list, etc.)
-- 32 write tools (client_add/update/delete, site_add/update/delete, dns_record_add/update/delete, etc.)
-- 1 alias (domain_add -> site_add)
+## Tools (65 total)
+- 22 read tools (system_info, client_list/get, sites_list/get, dns_zone_list/get, db_get, db_user_get, ftp_user_get, shell_user_get, etc.)
+- 42 write tools (full CRUD for clients, sites, dns zones, dns records [9 types], mail domains/users/aliases/forwards, databases/users, ftp/shell users, cron)
 - 1 provisioning (provision_site - full stack in one call)
 
 ## Architecture

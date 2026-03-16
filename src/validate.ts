@@ -27,7 +27,7 @@ interface ToolParamSchema {
 // Schemas
 // ---------------------------------------------------------------------------
 
-const DNS_TYPES = ["A", "AAAA", "MX", "TXT", "CNAME"];
+const DNS_TYPES = ["A", "AAAA", "MX", "TXT", "CNAME", "SRV", "CAA", "NS", "PTR"];
 
 export const TOOL_SCHEMAS: Record<string, ToolParamSchema> = {
   isp_provision_site: {
@@ -111,6 +111,50 @@ export const TOOL_SCHEMAS: Record<string, ToolParamSchema> = {
     anyOf: [["primary_id"]],
   },
   isp_cron_update: {
+    anyOf: [["primary_id"]],
+  },
+
+  // v0.4.0 additions
+  isp_dns_zone_get: {
+    anyOf: [["primary_id", "zone_id"]],
+  },
+  isp_dns_zone_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_mail_domain_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_mail_user_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_mail_alias_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_mail_forward_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_db_get: {
+    anyOf: [["primary_id"]],
+  },
+  isp_db_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_db_user_get: {
+    anyOf: [["primary_id"]],
+  },
+  isp_db_user_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_ftp_user_get: {
+    anyOf: [["primary_id"]],
+  },
+  isp_ftp_user_update: {
+    anyOf: [["primary_id"]],
+  },
+  isp_shell_user_get: {
+    anyOf: [["primary_id"]],
+  },
+  isp_shell_user_update: {
     anyOf: [["primary_id"]],
   },
 };

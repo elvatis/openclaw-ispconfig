@@ -7,18 +7,22 @@ import { validateParams } from "./validate";
 const KNOWN_METHODS = [
   "server_get_all", "server_get", "client_get_all", "client_get", "client_add", "client_update", "client_delete",
   "sites_web_domain_get", "sites_web_domain_add", "sites_web_domain_update", "sites_web_domain_delete",
-  "dns_zone_get_by_user", "dns_zone_add", "dns_zone_delete", "dns_rr_get_all_by_zone",
+  "dns_zone_get_by_user", "dns_zone_get", "dns_zone_add", "dns_zone_update", "dns_zone_delete", "dns_rr_get_all_by_zone",
   "dns_a_add", "dns_aaaa_add", "dns_mx_add", "dns_txt_add", "dns_cname_add",
   "dns_a_delete", "dns_aaaa_delete", "dns_mx_delete", "dns_txt_delete", "dns_cname_delete",
   "dns_a_update", "dns_aaaa_update", "dns_mx_update", "dns_txt_update", "dns_cname_update",
-  "mail_domain_get", "mail_domain_add", "mail_domain_delete",
-  "mail_user_get", "mail_user_add", "mail_user_delete",
-  "mail_alias_get", "mail_alias_add", "mail_alias_delete",
-  "mail_forward_get", "mail_forward_add", "mail_forward_delete",
-  "sites_database_get_all_by_user", "sites_database_add", "sites_database_delete",
-  "sites_database_user_add", "sites_database_user_delete",
-  "sites_shell_user_add", "sites_shell_user_delete",
-  "sites_ftp_user_add", "sites_ftp_user_delete",
+  "dns_srv_add", "dns_srv_update", "dns_srv_delete",
+  "dns_caa_add", "dns_caa_update", "dns_caa_delete",
+  "dns_ns_add", "dns_ns_update", "dns_ns_delete",
+  "dns_ptr_add", "dns_ptr_update", "dns_ptr_delete",
+  "mail_domain_get", "mail_domain_add", "mail_domain_update", "mail_domain_delete",
+  "mail_user_get", "mail_user_add", "mail_user_update", "mail_user_delete",
+  "mail_alias_get", "mail_alias_add", "mail_alias_update", "mail_alias_delete",
+  "mail_forward_get", "mail_forward_add", "mail_forward_update", "mail_forward_delete",
+  "sites_database_get_all_by_user", "sites_database_get", "sites_database_add", "sites_database_update", "sites_database_delete",
+  "sites_database_user_get", "sites_database_user_add", "sites_database_user_update", "sites_database_user_delete",
+  "sites_shell_user_get", "sites_shell_user_add", "sites_shell_user_update", "sites_shell_user_delete",
+  "sites_ftp_user_get", "sites_ftp_user_add", "sites_ftp_user_update", "sites_ftp_user_delete",
   "sites_cron_get", "sites_cron_add", "sites_cron_delete", "sites_cron_update",
 ];
 
@@ -40,9 +44,15 @@ function dnsMethodForType(type: string, action: "add" | "delete" | "update"): st
     case "MX": return `dns_mx_${action}`;
     case "TXT": return `dns_txt_${action}`;
     case "CNAME": return `dns_cname_${action}`;
+    case "SRV": return `dns_srv_${action}`;
+    case "CAA": return `dns_caa_${action}`;
+    case "NS": return `dns_ns_${action}`;
+    case "PTR": return `dns_ptr_${action}`;
     default: throw new Error(`Unsupported DNS record type: ${type}`);
   }
 }
+
+const DNS_RECORD_TYPES = ["A", "AAAA", "MX", "TXT", "CNAME", "SRV", "CAA", "NS", "PTR"];
 
 async function withClient<T>(context: ToolContext, toolName: string, fn: (client: ISPConfigClient) => Promise<T>): Promise<T> {
   assertToolAllowed(context.config, toolName);
@@ -380,7 +390,7 @@ export function createTools(): ToolDefinition[] {
       parameters: {
         type: "object",
         properties: {
-          type: { type: "string", enum: ["A", "AAAA", "MX", "TXT", "CNAME"], description: "DNS record type" },
+          type: { type: "string", enum: DNS_RECORD_TYPES, description: "DNS record type" },
           client_id: { type: "number", description: "Client ID" },
           params: { type: "object", description: "DNS record parameters" },
         },
@@ -397,7 +407,7 @@ export function createTools(): ToolDefinition[] {
       parameters: {
         type: "object",
         properties: {
-          type: { type: "string", enum: ["A", "AAAA", "MX", "TXT", "CNAME"], description: "DNS record type" },
+          type: { type: "string", enum: DNS_RECORD_TYPES, description: "DNS record type" },
           primary_id: { type: "number", description: "DNS record primary ID to delete" },
           client_id: { type: "number", description: "Client ID" },
         },
@@ -750,7 +760,7 @@ export function createTools(): ToolDefinition[] {
       parameters: {
         type: "object" as const,
         properties: {
-          type: { type: "string", enum: ["A", "AAAA", "MX", "TXT", "CNAME"], description: "DNS record type" },
+          type: { type: "string", enum: DNS_RECORD_TYPES, description: "DNS record type" },
           client_id: { type: "number", description: "Client ID" },
           primary_id: { type: "number", description: "DNS record ID to update" },
           params: { type: "object", description: "Fields to update" },
@@ -853,6 +863,222 @@ export function createTools(): ToolDefinition[] {
       },
       run: async (params, context) => withClient(context, "isp_cron_update", (client) =>
         client.call("sites_cron_update", params)),
+    },
+
+    // -------------------------------------------------------------------------
+    // New in v0.4.0 - DNS zone get/update
+    // -------------------------------------------------------------------------
+    {
+      name: "isp_dns_zone_get",
+      description: "Get a single DNS zone by ID",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          primary_id: { type: "number", description: "DNS zone ID" },
+          zone_id: { type: "number", description: "Alias for primary_id" },
+        },
+      },
+      run: async (params, context) => withClient(context, "isp_dns_zone_get", (client) =>
+        client.call("dns_zone_get", { primary_id: toNumber(params.primary_id ?? params.zone_id) })),
+    },
+    {
+      name: "isp_dns_zone_update",
+      description: "Update DNS zone settings (SOA NS, TTL, refresh, etc.)",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "DNS zone ID to update" },
+          params: { type: "object", description: "Fields to update (ns, mbox, refresh, retry, expire, minimum, ttl, active)" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_dns_zone_update", (client) =>
+        client.call("dns_zone_update", params)),
+    },
+
+    // -------------------------------------------------------------------------
+    // New in v0.4.0 - Mail updates
+    // -------------------------------------------------------------------------
+    {
+      name: "isp_mail_domain_update",
+      description: "Update mail domain settings",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Mail domain ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_mail_domain_update", (client) =>
+        client.call("mail_domain_update", params)),
+    },
+    {
+      name: "isp_mail_user_update",
+      description: "Update mail user (password, quota, etc.)",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Mail user ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_mail_user_update", (client) =>
+        client.call("mail_user_update", params)),
+    },
+    {
+      name: "isp_mail_alias_update",
+      description: "Update a mail alias",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Mail alias ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_mail_alias_update", (client) =>
+        client.call("mail_alias_update", params)),
+    },
+    {
+      name: "isp_mail_forward_update",
+      description: "Update a mail forward",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Mail forward ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_mail_forward_update", (client) =>
+        client.call("mail_forward_update", params)),
+    },
+
+    // -------------------------------------------------------------------------
+    // New in v0.4.0 - Database get/update
+    // -------------------------------------------------------------------------
+    {
+      name: "isp_db_get",
+      description: "Get a single database by ID",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          primary_id: { type: "number", description: "Database ID" },
+        },
+        required: ["primary_id"],
+      },
+      run: async (params, context) => withClient(context, "isp_db_get", (client) =>
+        client.call("sites_database_get", { primary_id: toNumber(params.primary_id) })),
+    },
+    {
+      name: "isp_db_update",
+      description: "Update database settings",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Database ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_db_update", (client) =>
+        client.call("sites_database_update", params)),
+    },
+    {
+      name: "isp_db_user_get",
+      description: "Get a database user by ID",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          primary_id: { type: "number", description: "Database user ID" },
+        },
+        required: ["primary_id"],
+      },
+      run: async (params, context) => withClient(context, "isp_db_user_get", (client) =>
+        client.call("sites_database_user_get", { primary_id: toNumber(params.primary_id) })),
+    },
+    {
+      name: "isp_db_user_update",
+      description: "Update a database user",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Database user ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_db_user_update", (client) =>
+        client.call("sites_database_user_update", params)),
+    },
+
+    // -------------------------------------------------------------------------
+    // New in v0.4.0 - FTP/Shell get/update
+    // -------------------------------------------------------------------------
+    {
+      name: "isp_ftp_user_get",
+      description: "Get FTP user details by ID",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          primary_id: { type: "number", description: "FTP user ID" },
+        },
+        required: ["primary_id"],
+      },
+      run: async (params, context) => withClient(context, "isp_ftp_user_get", (client) =>
+        client.call("sites_ftp_user_get", { primary_id: toNumber(params.primary_id) })),
+    },
+    {
+      name: "isp_ftp_user_update",
+      description: "Update an FTP user",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "FTP user ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_ftp_user_update", (client) =>
+        client.call("sites_ftp_user_update", params)),
+    },
+    {
+      name: "isp_shell_user_get",
+      description: "Get shell user details by ID",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          primary_id: { type: "number", description: "Shell user ID" },
+        },
+        required: ["primary_id"],
+      },
+      run: async (params, context) => withClient(context, "isp_shell_user_get", (client) =>
+        client.call("sites_shell_user_get", { primary_id: toNumber(params.primary_id) })),
+    },
+    {
+      name: "isp_shell_user_update",
+      description: "Update a shell user",
+      parameters: {
+        type: "object" as const,
+        properties: {
+          client_id: { type: "number", description: "Client ID" },
+          primary_id: { type: "number", description: "Shell user ID to update" },
+          params: { type: "object", description: "Fields to update" },
+        },
+        required: ["client_id", "primary_id", "params"],
+      },
+      run: async (params, context) => withClient(context, "isp_shell_user_update", (client) =>
+        client.call("sites_shell_user_update", params)),
     },
   ];
 

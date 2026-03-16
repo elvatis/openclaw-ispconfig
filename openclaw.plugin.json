@@ -1,7 +1,7 @@
 {
   "name": "ISPConfig",
   "id": "openclaw-ispconfig",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Manage ISPConfig servers: automated site provisioning, domains, mailboxes, DNS, databases, SSL, backups, and more.",
   "tools": [
     "isp_methods_list",
@@ -53,7 +53,21 @@
     "isp_ftp_user_delete",
     "isp_shell_user_delete",
     "isp_cron_delete",
-    "isp_cron_update"
+    "isp_cron_update",
+    "isp_dns_zone_get",
+    "isp_dns_zone_update",
+    "isp_mail_domain_update",
+    "isp_mail_user_update",
+    "isp_mail_alias_update",
+    "isp_mail_forward_update",
+    "isp_db_get",
+    "isp_db_update",
+    "isp_db_user_get",
+    "isp_db_user_update",
+    "isp_ftp_user_get",
+    "isp_ftp_user_update",
+    "isp_shell_user_get",
+    "isp_shell_user_update"
   ],
   "configSchema": {
     "$schema": "http://json-schema.org/draft-07/schema#",
