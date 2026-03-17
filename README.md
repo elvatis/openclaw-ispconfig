@@ -204,7 +204,7 @@ Workflow:
 6. Optionally create DB user and database
 7. Ensure SSL flags are enabled on the site
 
-**Total: 65 tools** (22 read + 42 write + 1 provisioning)
+**Total: 292 tools** covering the entire ISPConfig Remote API.
 
 ## Safety
 
@@ -231,67 +231,18 @@ It provides `isValidIssueRepoSlug()`, `resolveIssueRepo()`, and `buildGhIssueCre
 
 ## Changelog
 
-### 0.4.0 (2026-03-16)
+See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**14 new tools + expanded DNS types.** Full CRUD coverage for all managed resources.
+### 1.0.0 (2026-03-17)
 
-New tools:
+**Full ISPConfig API coverage: 292 tools.**
 
-- **DNS Zone:** `isp_dns_zone_get`, `isp_dns_zone_update` (SOA NS, TTL, refresh, etc.)
-- **Mail:** `isp_mail_domain_update`, `isp_mail_user_update`, `isp_mail_alias_update`, `isp_mail_forward_update`
-- **Database:** `isp_db_get`, `isp_db_update`, `isp_db_user_get`, `isp_db_user_update`
-- **FTP/Shell:** `isp_ftp_user_get`, `isp_ftp_user_update`, `isp_shell_user_get`, `isp_shell_user_update`
-
-DNS record type expansion:
-
-- `isp_dns_record_add`, `isp_dns_record_update`, `isp_dns_record_delete` now support **9 types**: A, AAAA, MX, TXT, CNAME, SRV, CAA, NS, PTR (was 5)
-
-Other changes:
-
-- Extended `KNOWN_METHODS` with 26 additional API methods
-- Added validation schemas for all new tools
-- Updated `/ispconfig` command to reflect 65 tools
-- Updated `dnsMethodForType()` to support SRV, CAA, NS, PTR
-
-**Total: 65 tools** (was 51)
-
-### 0.3.0 (2026-03-15)
-
-**20 new tools** - update, delete, aliases, forwards.
-
-New tools added:
-
-- **Client:** `isp_client_update`, `isp_client_delete`
-- **Sites:** `isp_site_update`, `isp_site_delete`
-- **Mail:** `isp_mail_domain_delete`, `isp_mail_alias_list`, `isp_mail_alias_add`, `isp_mail_alias_delete`, `isp_mail_forward_list`, `isp_mail_forward_add`, `isp_mail_forward_delete`
-- **DNS:** `isp_dns_zone_delete`, `isp_dns_record_update`
-- **Database:** `isp_db_delete`, `isp_db_user_delete`
-- **FTP/Shell:** `isp_ftp_user_delete`, `isp_shell_user_delete`
-- **Cron:** `isp_cron_delete`, `isp_cron_update`
-
-Other changes:
-
-- Extended `dnsMethodForType()` to support `update` action
-- Added validation schemas for all new delete/update tools
-- Updated KNOWN_METHODS list to include all new API methods
-- Updated `/ispconfig` command with full tool list and usage examples
-- Removed em dashes from all output strings and comments
-
-**Total: 51 tools (was 31)**
-
-### 0.2.1 (2026-03-15)
-
-**Bug fix:** Resolve `"Cannot read properties of undefined (reading 'properties')"` crash in OpenClaw UI.
-
-- **Added JSON Schema `parameters` to all 31 tool definitions** - previously tools only had `name`, `description`, and `run`, causing the UI to crash when accessing `tool.parameters.properties`
-- **Fixed `registerViaApi()` to pass `parameters` through** to `api.registerTool()` - schemas were defined but never forwarded to OpenClaw
-- **Changed tool registration from `run` to `execute`** - OpenClaw's plugin API expects `execute(params)`, not `run(params)`
-- **Updated `BoundTool` interface** to include optional `parameters` field
-- **Updated `ToolDefinition` interface** to include optional `parameters` field
-
-### 0.2.0 (2026-03-07)
-
-- Initial release with 31 tools, `/ispconfig` command, safety guards
+- **Phase 1 (Core):** Clients, Server, Web Domain backups, Quota/Traffic, Monitoring (+32)
+- **Phase 2 (DNS):** All DNS record types (DNAME, DS, HINFO, LOC, NAPTR, RP, SSHFP, TLSA, ALIAS), slaves, templates, DNSSEC (+54)
+- **Phase 3 (Mail):** Alias domains, catchall, mailing lists, filters, fetchmail, transport, relay, spam (+66)
+- **Phase 4 (Web):** VHost aliases/subdomains, web folders, WebDAV (+29)
+- **Phase 5 (System):** Config, APS packages, domain registry, permissions (+25)
+- **Phase 6 (OpenVZ):** Templates, IPs, VMs with full lifecycle (+22)
 
 ## License
 
