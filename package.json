@@ -1,6 +1,6 @@
 {
   "name": "@elvatis_com/openclaw-ispconfig",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "OpenClaw plugin for ISPConfig server management - domains, mailboxes, databases, DNS, websites",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "mailbox",
     "server-management"
   ],
-  "author": "Elvatis <info@example.invalid>",
+  "author": "Elvatis <emre.kohler@elvatis.com>",
   "license": "MIT",
   "repository": {
     "type": "git",

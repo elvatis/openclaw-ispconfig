@@ -1,16 +1,18 @@
 # @elvatis_com/openclaw-ispconfig
 
-**Current version:** 0.4.1
+**Current version:** 1.0.0
 
-OpenClaw plugin to manage ISPConfig via the Remote JSON API.
+OpenClaw plugin for full ISPConfig server management via the Remote JSON API.
 
 ## Features
 
 - Session-based API client with auto-reconnect
-- 65 tools for read, write, update, delete, and one-command provisioning
+- **292 tools** covering the entire ISPConfig Remote API
+- Full CRUD for: Clients, Sites, DNS, Mail, Databases, FTP, Shell, Cron, WebDAV, OpenVZ
+- Advanced: Spam filters, mail policies, fetchmail, relay domains, APS packages, system config
 - `/ispconfig` chat command for quick help and tool reference
 - Safety guards via `readOnly` and `allowedOperations`
-- Live integration tests against a real ISPConfig host (read-only)
+- Live integration tests against a real ISPConfig host
 
 ## ISPConfig API format
 

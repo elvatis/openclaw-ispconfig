@@ -129,7 +129,7 @@ describe("write tools (mock-based)", () => {
   test("isp_dns_record_add rejects unsupported type via schema validation", async () => {
     const tool = findTool(tools, "isp_dns_record_add");
 
-    await expect(tool.run({ type: "SRV" }, ctx())).rejects.toThrow("must be one of [A, AAAA, MX, TXT, CNAME]");
+    await expect(tool.run({ type: "INVALID" }, ctx())).rejects.toThrow("must be one of");
   });
 
   // ---- isp_dns_record_delete - type dispatch ----
@@ -689,7 +689,7 @@ describe("validateParams (unit)", () => {
   });
 
   test("isp_dns_record_add rejects invalid type", () => {
-    expect(() => validateParams("isp_dns_record_add", { type: "SRV" })).toThrow("must be one of");
+    expect(() => validateParams("isp_dns_record_add", { type: "INVALID" })).toThrow("must be one of");
   });
 
   test("isp_dns_record_add accepts valid types case-insensitively", () => {
