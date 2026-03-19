@@ -30,7 +30,7 @@
     "url": "git+https://github.com/elvatis/openclaw-ispconfig.git"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^25.5.0",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
