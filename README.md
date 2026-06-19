@@ -1,5 +1,7 @@
 # @elvatis_com/openclaw-ispconfig
 
+> **Archived and no longer maintained.** This project is no longer actively developed and has been archived. It is provided as-is under the MIT License. Feel free to fork and use it.
+
 **Current version:** 1.0.0
 
 OpenClaw plugin for full ISPConfig server management via the Remote JSON API.
