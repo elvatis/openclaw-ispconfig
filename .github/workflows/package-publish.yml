@@ -62,4 +62,4 @@ jobs:
       package_artifact_name: clawpack
       source_repo: elvatis/openclaw-ispconfig
       source_commit: ${{ github.sha }}
-      source_ref: ${{ github.ref_name }}
+      source_ref: ${{ github.sha }}
