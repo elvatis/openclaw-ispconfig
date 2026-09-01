@@ -1,0 +1,54 @@
+name: Publish to ClawHub
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - run: npm test
+
+      - name: Create package artifact
+        run: |
+          mkdir clawpack
+          npm pack --json --pack-destination clawpack > clawpack/pack.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clawpack
+          path: clawpack/*.tgz
+          if-no-files-found: error
+
+  publish:
+    needs: build-package
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    uses: openclaw/clawhub/.github/workflows/package-publish.yml@2d029cf8c5b83f4d539365f1015d8b0e5b481a81
+    with:
+      source: elvatis/openclaw-ispconfig@${{ github.sha }}
+      owner: elvatis
+      family: code-plugin
+      dry_run: false
+      wait_for_publication: true
+      publication_timeout_minutes: 30
+      package_artifact_name: clawpack
+      source_repo: elvatis/openclaw-ispconfig
+      source_commit: ${{ github.sha }}
+      source_ref: ${{ github.ref_name }}

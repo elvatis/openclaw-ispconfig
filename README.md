@@ -7,6 +7,8 @@ OpenClaw plugin for managing ISPConfig through its Remote JSON API. It exposes 2
 
 Pushing a `v<version>` tag creates a verified GitHub Release with the packaged artifact. It never publishes to npm.
 
+ClawHub releases use GitHub OIDC Trusted Publishing. Start **Publish to ClawHub** manually from the Actions tab. It builds and tests the selected commit, publishes its artifact, and waits for ClawHub security checks. No long-lived ClawHub token is stored in the repository.
+
 ## What changed in 2026.8.1
 
 - Updated the manifest and tool adapter for the OpenClaw 2026.8.1 plugin API.
