@@ -47,19 +47,42 @@ jobs:
 
   publish:
     needs: build-package
+    runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: read
       id-token: write
-    uses: openclaw/clawhub/.github/workflows/package-publish.yml@2d029cf8c5b83f4d539365f1015d8b0e5b481a81
-    with:
-      source: elvatis/openclaw-ispconfig@${{ github.sha }}
-      family: code-plugin
-      dry_run: ${{ inputs.dry_run }}
-      wait_for_publication: true
-      publication_timeout_minutes: 30
-      changelog: ${{ inputs.changelog }}
-      package_artifact_name: clawpack
-      source_repo: elvatis/openclaw-ispconfig
-      source_commit: ${{ github.sha }}
-      source_ref: ${{ github.sha }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+
+      - name: Validate package for OpenClaw 2026.8.1
+        run: npm exec --yes --package=clawhub@0.23.3 -- clawhub package validate . --openclaw-version 2026.8.1
+
+      - name: Publish package through ClawHub OIDC
+        env:
+          CLAWHUB_CHANGELOG: ${{ inputs.changelog }}
+          CLAWHUB_DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          if [ "$CLAWHUB_DRY_RUN" = "true" ]; then
+            dry_run_flag=(--dry-run)
+          else
+            dry_run_flag=()
+          fi
+          npm exec --yes --package=clawhub@0.23.3 -- clawhub package publish . \
+            --family code-plugin \
+            "${dry_run_flag[@]}" \
+            --wait \
+            --wait-timeout 1800 \
+            --json \
+            --changelog "$CLAWHUB_CHANGELOG" \
+            --source-repo elvatis/openclaw-ispconfig \
+            --source-commit "$GITHUB_SHA" \
+            --source-ref "$GITHUB_SHA"
