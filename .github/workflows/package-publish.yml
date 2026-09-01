@@ -2,6 +2,12 @@ name: Publish to ClawHub
 
 on:
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Preview the ClawHub publication without uploading a release"
+        required: true
+        default: true
+        type: boolean
 
 permissions:
   contents: read
@@ -45,7 +51,7 @@ jobs:
       source: elvatis/openclaw-ispconfig@${{ github.sha }}
       owner: elvatis
       family: code-plugin
-      dry_run: false
+      dry_run: ${{ inputs.dry_run }}
       wait_for_publication: true
       publication_timeout_minutes: 30
       package_artifact_name: clawpack
