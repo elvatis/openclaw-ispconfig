@@ -1,6 +1,6 @@
 {
   "name": "@elvatis/openclaw-ispconfig",
-  "version": "2026.8.3",
+  "version": "2026.8.1",
   "description": "OpenClaw plugin for ISPConfig server management - domains, mailboxes, databases, DNS, websites",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,20 +1,11 @@
 # Changelog
 
-## 2026.8.3 (2026-09-01)
-
-### Fixed
-- Republished the completed ClawHub install metadata after the prior `2026.8.2` publication attempt remained reserved but non-public in ClawHub.
-
-## 2026.8.2 (2026-09-01)
-
-### Fixed
-- Added ClawHub install metadata for `@elvatis/openclaw-ispconfig`, including the install source, default choice, and OpenClaw 2026.8.1 minimum host version.
-
 ## 2026.8.1 (2026-09-01)
 
 ### Changed
 - Restored compatibility with OpenClaw 2026.8.1: the manifest declares tools through `contracts.tools`, and the runtime adapter implements the current `registerTool` contract.
 - Aligned the package and plugin version with OpenClaw 2026.8.1.
+- Added complete ClawHub install metadata, including the install source, default choice, and OpenClaw 2026.8.1 minimum host version.
 - Made `readOnly` default to `true` and completed the write-tool guard coverage for legacy CRUD tools.
 - `isp_provision_site` now requires explicit mailbox and database passwords when it creates those resources. It no longer creates predictable passwords.
 - Removed archived AAHP handoff artifacts and the npm auto-publish workflow. Releases are prepared for GitHub and ClawHub only.
