@@ -8,6 +8,11 @@ on:
         required: true
         default: true
         type: boolean
+      changelog:
+        description: "Release notes shown on ClawHub"
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -54,6 +59,7 @@ jobs:
       dry_run: ${{ inputs.dry_run }}
       wait_for_publication: true
       publication_timeout_minutes: 30
+      changelog: ${{ inputs.changelog }}
       package_artifact_name: clawpack
       source_repo: elvatis/openclaw-ispconfig
       source_commit: ${{ github.sha }}

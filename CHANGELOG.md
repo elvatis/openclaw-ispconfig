@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.8.2 (2026-09-01)
+
+### Fixed
+- Added ClawHub install metadata for `@elvatis/openclaw-ispconfig`, including the install source, default choice, and OpenClaw 2026.8.1 minimum host version.
+
 ## 2026.8.1 (2026-09-01)
 
 ### Changed

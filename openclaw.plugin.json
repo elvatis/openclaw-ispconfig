@@ -1,7 +1,7 @@
 {
   "name": "ISPConfig",
   "id": "openclaw-ispconfig",
-  "version": "2026.8.1",
+  "version": "2026.8.2",
   "description": "Manage ISPConfig servers: automated site provisioning, domains, mailboxes, DNS, databases, SSL, backups, and more.",
   "contracts": {
     "tools": [
