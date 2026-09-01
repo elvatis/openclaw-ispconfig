@@ -5,6 +5,8 @@ OpenClaw plugin for managing ISPConfig through its Remote JSON API. It exposes 2
 **Release line:** OpenClaw 2026.8.1
 **Distribution:** GitHub and ClawHub only. This package is not published to npm.
 
+Pushing a `v<version>` tag creates a verified GitHub Release with the packaged artifact. It never publishes to npm.
+
 ## What changed in 2026.8.1
 
 - Updated the manifest and tool adapter for the OpenClaw 2026.8.1 plugin API.

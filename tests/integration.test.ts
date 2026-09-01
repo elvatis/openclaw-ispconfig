@@ -57,7 +57,7 @@ describeLive("ISPConfig live integration", () => {
 
     // Do not assert private domains in public repos.
     expect(domains.length).toBeGreaterThan(0);
-  });
+  }, 60_000);
 
   test("client details for client_id=1 has a name", async () => {
     const details = await client.call<Record<string, unknown>>("client_get", { client_id: 1 });
@@ -82,7 +82,7 @@ describeLive("ISPConfig live integration", () => {
     if (out.status.length > 0) {
       expect(Object.prototype.hasOwnProperty.call(out.status[0], "ssl")).toBe(true);
     }
-  });
+  }, 60_000);
 });
 
 describe("guards", () => {
