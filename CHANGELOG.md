@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026.8.3 (2026-09-01)
+
+### Fixed
+- Republished the completed ClawHub install metadata after the prior `2026.8.2` publication attempt remained reserved but non-public in ClawHub.
+
 ## 2026.8.2 (2026-09-01)
 
 ### Fixed
