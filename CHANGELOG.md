@@ -8,6 +8,7 @@
 - Made `readOnly` default to `true` and completed the write-tool guard coverage for legacy CRUD tools.
 - `isp_provision_site` now requires explicit mailbox and database passwords when it creates those resources. It no longer creates predictable passwords.
 - Removed archived AAHP handoff artifacts and the npm auto-publish workflow. Releases are prepared for GitHub and ClawHub only.
+- Updated the development lockfile to resolve reported dependency vulnerabilities.
 
 ## 1.0.0 (2026-03-17)
 
