@@ -54,7 +54,6 @@ jobs:
     uses: openclaw/clawhub/.github/workflows/package-publish.yml@2d029cf8c5b83f4d539365f1015d8b0e5b481a81
     with:
       source: elvatis/openclaw-ispconfig@${{ github.sha }}
-      owner: elvatis
       family: code-plugin
       dry_run: ${{ inputs.dry_run }}
       wait_for_publication: true
